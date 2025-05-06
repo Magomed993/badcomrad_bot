@@ -3,6 +3,7 @@ import os
 
 from dotenv import load_dotenv
 from telegram import Update, ForceReply
+from dialodFlow import detect_intent_texts
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext
 
 
@@ -27,9 +28,11 @@ def help_command(update: Update, context: CallbackContext) -> None:
     update.message.reply_text('Help!')
 
 
-def echo(update: Update, context: CallbackContext) -> None:
-    """Echo the user message."""
-    update.message.reply_text(update.message.text)
+def smart_guy(update: Update, context: CallbackContext) -> None:
+    proj_id = os.environ['PROJECT_ID']
+    session_id = '123456789'
+    language_code = os.environ['LANGUAGE']
+    update.message.reply_text(detect_intent_texts(proj_id, session_id,  [update.message.text], language_code))
 
 
 def main() -> None:
@@ -44,7 +47,7 @@ def main() -> None:
     dispatcher.add_handler(CommandHandler("start", start))
     dispatcher.add_handler(CommandHandler("help", help_command))
 
-    dispatcher.add_handler(MessageHandler(Filters.text & ~Filters.command, echo))
+    dispatcher.add_handler(MessageHandler(Filters.text & ~Filters.command, smart_guy))
 
     updater.start_polling()
 
