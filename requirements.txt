@@ -4,3 +4,4 @@ urllib3==2.3.0
 python-dotenv==1.1.0
 google-cloud-api-keys==0.5.16
 google-cloud-dialogflow==2.41.1
+vk-api==11.9.9
