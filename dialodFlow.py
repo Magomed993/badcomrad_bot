@@ -29,6 +29,8 @@ def detect_intent_texts(project_id, session_id, texts, language_code):
         print(f'''Query text: {response.query_result.query_text}
 Detected intent: {response.query_result.intent.display_name} (confidence: {response.query_result.intent_detection_confidence})\n
 Fulfillment text: {response.query_result.fulfillment_text}\n''')
+        if response.query_result.intent.is_fallback:
+            return None
         return response.query_result.fulfillment_text
 
 
@@ -64,6 +66,5 @@ def create_intent(project_id, display_name, training_phrases_parts, message_text
 
 
 if __name__ == '__main__':
-    detect_intent_texts('magic-fjpn', '123456789', ['Хай'], 'ru-RUS')
     for intent in INTENTS:
         create_intent('magic-fjpn', intent, INTENTS.get(intent)['questions'], [INTENTS.get(intent)['answer']])

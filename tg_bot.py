@@ -17,10 +17,7 @@ logger = logging.getLogger(__name__)
 def start(update: Update, context: CallbackContext) -> None:
     """Send a message when the command /start is issued."""
     user = update.effective_user
-    update.message.reply_markdown_v2('Здравствуйте'
-        # fr'Hi {user.mention_markdown_v2()}\!',
-        # reply_markup=ForceReply(selective=True),
-    )
+    update.message.reply_markdown_v2('Здравствуйте')
 
 
 def help_command(update: Update, context: CallbackContext) -> None:
@@ -32,7 +29,9 @@ def smart_guy(update: Update, context: CallbackContext) -> None:
     proj_id = os.environ['PROJECT_ID']
     session_id = '123456789'
     language_code = os.environ['LANGUAGE']
-    update.message.reply_text(detect_intent_texts(proj_id, session_id,  [update.message.text], language_code))
+    response_text = detect_intent_texts(proj_id, session_id,  [update.message.text], language_code)
+    if response_text:
+        update.message.reply_text(response_text)
 
 
 def main() -> None:

@@ -11,11 +11,13 @@ def echo(event, vk_api):
     proj_id = os.environ['PROJECT_ID']
     session_id = '123456789'
     language_code = os.environ['LANGUAGE']
-    vk_api.messages.send(
-        user_id=event.user_id,
-        message=detect_intent_texts(proj_id, session_id, [event.text], language_code),
-        random_id=random.randint(1,1000)
-    )
+    response_text = detect_intent_texts(proj_id, session_id, [event.text], language_code)
+    if response_text:
+        vk_api.messages.send(
+            user_id=event.user_id,
+            message=response_text,
+            random_id=random.randint(1,1000)
+        )
 
 
 if __name__ == "__main__":
