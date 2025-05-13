@@ -14,7 +14,7 @@ pip install -r requirements.txt
 Создать двух ботов и получить `TOKEN` и `LOGGS_TOKEN` у [Отца Ботов](https://telegram.me/BotFather). Один служит для общения с нейросетью, а второй для направления сообщений о логах (работоспособность бота).\
 Создать [проект в DialogFlow](https://cloud.google.com/dialogflow/es/docs/quick/setup).\
 Создать [агента в DialogFlow](https://cloud.google.com/dialogflow/es/docs/quick/build-agent). Получить идентификатор `PROJECT_ID`.\
-Необходимо [Включить API](https://cloud.google.com/dialogflow/es/docs/quick/setup#api) произвести [установку](https://cloud.google.com/sdk/docs/install) и [инициализацию gcloud CLI](https://cloud.google.com/sdk/docs/initializing), тем самым получить файл с настройками `credentials.json`.
+Необходимо [Включить API](https://cloud.google.com/dialogflow/es/docs/quick/setup#api) произвести [установку](https://cloud.google.com/sdk/docs/install) и [инициализацию gcloud CLI](https://cloud.google.com/sdk/docs/initializing), тем самым получить файл с настройками `credentials.json`.\
 В переменной `GOOGLE_APPLICATION_CREDENTIALS` необходимо указать путь до файла `credentials.json`.\
 `CHAT_ID` - это id куда будет бот отправлять сообщения о результатах проверки и логов.\
 Вы можете определить свой id через другого бота [@userinfobot](@userinfobot). Пропишите `/start` и он выдаст ваш id.
