@@ -1,13 +1,34 @@
 import os
 import random
 import vk_api
+import logging
 
+from telegram import Bot
 from dotenv import load_dotenv
 from vk_api.longpoll import VkLongPoll, VkEventType
-from dialodFlow import detect_intent_texts
+from dialogFlow import detect_intent_texts
 
 
-def echo(event, vk_api):
+logging.basicConfig(
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO
+)
+
+logger = logging.getLogger(__name__)
+
+
+class TelegramLogsHandler(logging.Handler):
+
+    def __init__(self, tg_bot, chat_id):
+        super().__init__()
+        self.chat_id = chat_id
+        self.tg_bot = tg_bot
+
+    def emit(self, record):
+        log_entry = self.format(record)
+        self.tg_bot.send_message(chat_id=self.chat_id, text=log_entry)
+
+
+def smart_guy(event, vk_api):
     proj_id = os.environ['PROJECT_ID']
     session_id = '123456789'
     language_code = os.environ['LANGUAGE']
@@ -18,14 +39,28 @@ def echo(event, vk_api):
             message=response_text,
             random_id=random.randint(1,1000)
         )
+        logger.info(f'Отправлено сообщение ВК-сообществу: "{event.text}"')
 
 
 if __name__ == "__main__":
     load_dotenv()
     vk_token = os.environ['VK_TOKEN']
     vk_session = vk_api.VkApi(token=vk_token)
+
+    loggs_token = os.environ['LOGGS_TOKEN']
+    chat_id = os.environ['CHAT_ID']
+
+    log_bot = Bot(token=loggs_token)
+    logger.setLevel(logging.INFO)
+    log_handler = TelegramLogsHandler(log_bot, chat_id)
+    logger.addHandler(log_handler)
+    logger.info("ВК-сообщество 'test_group' запущен!")
+
     vk_api = vk_session.get_api()
     longpoll = VkLongPoll(vk_session)
-    for event in longpoll.listen():
-        if event.type == VkEventType.MESSAGE_NEW and event.to_me:
-            echo(event, vk_api)
+    try:
+        for event in longpoll.listen():
+            if event.type == VkEventType.MESSAGE_NEW and event.to_me:
+                smart_guy(event, vk_api)
+    except Exception as err:
+        logger.exception(err)
