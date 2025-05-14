@@ -1,6 +1,15 @@
 import os
 import json
+
 from google.cloud import dialogflow
+from dotenv import load_dotenv
+
+
+def print_response_info(response):
+    print("=" * 50)
+    print(f'''Query text: {response.query_result.query_text}
+Detected intent: {response.query_result.intent.display_name} (confidence: {response.query_result.intent_detection_confidence})\n
+Fulfillment text: {response.query_result.fulfillment_text}\n''')
 
 
 def detect_intent_texts(project_id, session_id, texts, language_code):
@@ -12,7 +21,6 @@ def detect_intent_texts(project_id, session_id, texts, language_code):
     session_client = dialogflow.SessionsClient()
 
     session = session_client.session_path(project_id, session_id)
-    print(f'Session path: {session}\n')
 
     for text in texts:
         text_input = dialogflow.TextInput(text=text, language_code=language_code)
@@ -25,14 +33,11 @@ def detect_intent_texts(project_id, session_id, texts, language_code):
                 'query_input': query_input
             }
         )
+        print_response_info(response)
 
-        print("=" * 50)
-        print(f'''Query text: {response.query_result.query_text}
-Detected intent: {response.query_result.intent.display_name} (confidence: {response.query_result.intent_detection_confidence})\n
-Fulfillment text: {response.query_result.fulfillment_text}\n''')
-        if response.query_result.intent.is_fallback:
-            return None
-        return response.query_result.fulfillment_text
+    if response.query_result.intent.is_fallback:
+        return None
+    return response.query_result.fulfillment_text
 
 
 def create_intent(project_id, display_name, training_phrases_parts, message_texts):
@@ -58,10 +63,11 @@ def create_intent(project_id, display_name, training_phrases_parts, message_text
         request={"parent": parent, "intent": intent}
     )
 
-    print("Intent created: {}".format(response))
+    return response
 
 
 if __name__ == '__main__':
+    load_dotenv()
     path_intents = os.environ['PATH_INTENT']
     project_id = os.environ['PROJECT_ID']
 

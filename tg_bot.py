@@ -4,27 +4,12 @@ import random
 
 from dotenv import load_dotenv
 from telegram import Update, Bot
+from tg_logger import TelegramLogsHandler
 from dialog_flow import detect_intent_texts
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext
 
 
-logging.basicConfig(
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO
-)
-
 logger = logging.getLogger(__name__)
-
-
-class TelegramLogsHandler(logging.Handler):
-
-    def __init__(self, tg_bot, chat_id):
-        super().__init__()
-        self.chat_id = chat_id
-        self.tg_bot = tg_bot
-
-    def emit(self, record):
-        log_entry = self.format(record)
-        self.tg_bot.send_message(chat_id=self.chat_id, text=log_entry)
 
 
 def start(update: Update, context: CallbackContext) -> None:
@@ -51,6 +36,9 @@ def smart_guy(update: Update, context: CallbackContext) -> None:
 def main() -> None:
     """Start the bot."""
     load_dotenv()
+    logging.basicConfig(
+        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO
+    )
     talkative_token = os.environ['TOKEN']
 
     loggs_token = os.environ['LOGGS_TOKEN']

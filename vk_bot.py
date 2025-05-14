@@ -4,28 +4,13 @@ import vk_api
 import logging
 
 from telegram import Bot
+from tg_logger import TelegramLogsHandler
 from dotenv import load_dotenv
 from vk_api.longpoll import VkLongPoll, VkEventType
 from dialog_flow import detect_intent_texts
 
 
-logging.basicConfig(
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO
-)
-
 logger = logging.getLogger(__name__)
-
-
-class TelegramLogsHandler(logging.Handler):
-
-    def __init__(self, tg_bot, chat_id):
-        super().__init__()
-        self.chat_id = chat_id
-        self.tg_bot = tg_bot
-
-    def emit(self, record):
-        log_entry = self.format(record)
-        self.tg_bot.send_message(chat_id=self.chat_id, text=log_entry)
 
 
 def smart_guy(event, vk_api):
@@ -44,6 +29,9 @@ def smart_guy(event, vk_api):
 
 if __name__ == "__main__":
     load_dotenv()
+    logging.basicConfig(
+        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO
+    )
     vk_token = os.environ['VK_TOKEN']
     vk_session = vk_api.VkApi(token=vk_token)
 
