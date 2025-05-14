@@ -3,6 +3,7 @@ import os
 import random
 
 from dotenv import load_dotenv
+from functools import partial
 from telegram import Update, Bot
 from tg_logger import TelegramLogsHandler
 from dialog_flow import detect_intent_texts
@@ -23,10 +24,8 @@ def help_command(update: Update, context: CallbackContext) -> None:
     update.message.reply_text('Help!')
 
 
-def smart_guy(update: Update, context: CallbackContext) -> None:
-    proj_id = os.environ['PROJECT_ID']
+def sends_messages(update: Update, context: CallbackContext, proj_id, language_code) -> None:
     session_id = random.randint(100000000, 999999999)
-    language_code = os.environ['LANGUAGE']
     response_text = detect_intent_texts(proj_id, session_id,  [update.message.text], language_code)
     if response_text:
         update.message.reply_text(response_text)
@@ -39,10 +38,12 @@ def main() -> None:
     logging.basicConfig(
         format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO
     )
-    talkative_token = os.environ['TOKEN']
+    tg_token = os.environ['TG_TOKEN']
+    proj_id = os.environ['PROJECT_ID']
+    language_code = os.environ['LANGUAGE']
 
-    loggs_token = os.environ['LOGGS_TOKEN']
-    chat_id = os.environ['CHAT_ID']
+    loggs_token = os.environ['LOGGER_TOKEN']
+    chat_id = os.environ['TG_CHAT_ID']
 
     log_bot = Bot(token=loggs_token)
     logger.setLevel(logging.INFO)
@@ -50,15 +51,15 @@ def main() -> None:
     logger.addHandler(log_handler)
     logger.info("Телеграмм-бот 'badcomrad' запущен!")
 
-    updater = Updater(talkative_token)
+    updater = Updater(tg_token)
 
     dispatcher = updater.dispatcher
 
     try:
         dispatcher.add_handler(CommandHandler("start", start))
         dispatcher.add_handler(CommandHandler("help", help_command))
-
-        dispatcher.add_handler(MessageHandler(Filters.text & ~Filters.command, smart_guy))
+        handler_with_args = partial(sends_messages, proj_id=proj_id, language_code=language_code)
+        dispatcher.add_handler(MessageHandler(Filters.text & ~Filters.command, handler_with_args))
 
         updater.start_polling()
 

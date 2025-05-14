@@ -11,22 +11,22 @@ Python3 должен быть уже установлен. Затем испол
 pip install -r requirements.txt
 ```
 ## Окружения
-Создать двух ботов и получить `TOKEN` и `LOGGS_TOKEN` у [Отца Ботов](https://telegram.me/BotFather). Один служит для общения с нейросетью, а второй для направления сообщений о логах (работоспособность бота).\
+Создать двух ботов и получить `TG_TOKEN` и `LOGGER_TOKEN` у [Отца Ботов](https://telegram.me/BotFather). Один служит для общения с нейросетью, а второй для направления сообщений о логах (работоспособность бота).\
 Создать [проект в DialogFlow](https://cloud.google.com/dialogflow/es/docs/quick/setup).\
 Создать [агента в DialogFlow](https://cloud.google.com/dialogflow/es/docs/quick/build-agent). Получить идентификатор `PROJECT_ID`.\
 Необходимо [Включить API](https://cloud.google.com/dialogflow/es/docs/quick/setup#api) произвести [установку](https://cloud.google.com/sdk/docs/install) и [инициализацию gcloud CLI](https://cloud.google.com/sdk/docs/initializing), тем самым получить файл с настройками `credentials.json`.\
 В переменной `GOOGLE_APPLICATION_CREDENTIALS` необходимо указать путь до файла `credentials.json`.\
-`CHAT_ID` - это id куда будет бот отправлять сообщения о результатах проверки и логов.\
+`TG_CHAT_ID` - это id куда будет бот отправлять сообщения о результатах проверки и логов.\
 Вы можете определить свой id через другого бота [@userinfobot](@userinfobot). Пропишите `/start` и он выдаст ваш id.
 ## Переменные окружения
 ```
-TOKEN=ВАШ_БОТ_ТОКЕН
+TG_TOKEN=ВАШ_БОТ_ТОКЕН
 PROJECT_ID=ВАШ_ID
 LANGUAGE=(можно указать стандартный)en-EN
 VK_TOKEN=ВАШ_ТОКЕН_ВК
 GOOGLE_APPLICATION_CREDENTIALS=путь_до_файла_credentials.json
-LOGGS_TOKEN=ВАШ_ТОКЕН_API
-CHAT_ID=ВАШ_ID
+LOGGER_TOKEN=ВАШ_ТОКЕН_API
+TG_CHAT_ID=ВАШ_ID
 PATH_INTENT=путь_до_намерений(слов, вопросов)
 ```
 ### Как получить
@@ -48,13 +48,15 @@ python3 tg_bot.py
 python3 vk_bot.py
 ```
 скрипт запускает ВК-сообщество, в котором обучение и общение происходит через [DialoFlow](https://dialogflow.cloud.google.com/).
-### `dialogFlow.py`
+### `dialog_flow.py`
 ```
-python3 dialogFlow.py
+python3 dialog_flow.py
 ```
-данный скрипт уже по подготовленным терминам файла `intents.json` обучает [DialoFlow](https://dialogflow.cloud.google.com/) к определенным вопросам и ответам.
+данный скрипт уже по подготовленным терминам файла `intents.json` обучает [DialogFlow](https://dialogflow.cloud.google.com/) к определенным вопросам и ответам.
+### `tg_logger`
+Обработчик логов. Не требуется в запуске
 ## Загрузка вопросов и ответов для обучения нейросети
-Загрузка вопросов и ответов производится автоматически после запуска скрипта `dialogFlow.py`.\
+Загрузка вопросов и ответов производится автоматически после запуска скрипта `dialog_flow.py`.\
 Возможен вариант заносить свои вопросы и ответы в файл `intents.json` дополняя или, в случае необходимости, заменяя его:
 ```json
 {
