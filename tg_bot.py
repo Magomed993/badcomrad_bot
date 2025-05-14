@@ -1,9 +1,10 @@
 import logging
 import os
+import random
 
 from dotenv import load_dotenv
 from telegram import Update, Bot
-from dialogFlow import detect_intent_texts
+from dialog_flow import detect_intent_texts
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext
 
 
@@ -39,7 +40,7 @@ def help_command(update: Update, context: CallbackContext) -> None:
 
 def smart_guy(update: Update, context: CallbackContext) -> None:
     proj_id = os.environ['PROJECT_ID']
-    session_id = '123456789'
+    session_id = random.randint(100000000, 999999999)
     language_code = os.environ['LANGUAGE']
     response_text = detect_intent_texts(proj_id, session_id,  [update.message.text], language_code)
     if response_text:

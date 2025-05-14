@@ -1,3 +1,4 @@
+import os
 import json
 from google.cloud import dialogflow
 
@@ -34,11 +35,6 @@ Fulfillment text: {response.query_result.fulfillment_text}\n''')
         return response.query_result.fulfillment_text
 
 
-with open('intents.json', 'r') as my_file:
-    intents_json = my_file.read()
-INTENTS = json.loads(intents_json)
-
-
 def create_intent(project_id, display_name, training_phrases_parts, message_texts):
     """Create an intent of the given intent type."""
     intents_client = dialogflow.IntentsClient()
@@ -66,5 +62,12 @@ def create_intent(project_id, display_name, training_phrases_parts, message_text
 
 
 if __name__ == '__main__':
-    for intent in INTENTS:
-        create_intent('magic-fjpn', intent, INTENTS.get(intent)['questions'], [INTENTS.get(intent)['answer']])
+    path_intents = os.environ['PATH_INTENT']
+    project_id = os.environ['PROJECT_ID']
+
+    with open(path_intents, 'r') as my_file:
+        intents_json = my_file.read()
+    intents = json.loads(intents_json)
+
+    for intent in intents:
+        create_intent(project_id, intent, intents.get(intent)['questions'], [intents.get(intent)['answer']])

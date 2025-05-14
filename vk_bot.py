@@ -6,7 +6,7 @@ import logging
 from telegram import Bot
 from dotenv import load_dotenv
 from vk_api.longpoll import VkLongPoll, VkEventType
-from dialogFlow import detect_intent_texts
+from dialog_flow import detect_intent_texts
 
 
 logging.basicConfig(
@@ -30,7 +30,7 @@ class TelegramLogsHandler(logging.Handler):
 
 def smart_guy(event, vk_api):
     proj_id = os.environ['PROJECT_ID']
-    session_id = '123456789'
+    session_id = random.randint(100000000, 999999999)
     language_code = os.environ['LANGUAGE']
     response_text = detect_intent_texts(proj_id, session_id, [event.text], language_code)
     if response_text:
