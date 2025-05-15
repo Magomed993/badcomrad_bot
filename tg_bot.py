@@ -1,6 +1,5 @@
 import logging
 import os
-import random
 
 from dotenv import load_dotenv
 from functools import partial
@@ -25,11 +24,11 @@ def help_command(update: Update, context: CallbackContext) -> None:
 
 
 def sends_messages(update: Update, context: CallbackContext, proj_id, language_code) -> None:
-    session_id = random.randint(100000000, 999999999)
+    session_id = f'tg - {update.effective_user.id}'
     response_text = detect_intent_texts(proj_id, session_id,  [update.message.text], language_code)
     if response_text:
         update.message.reply_text(response_text)
-        logger.info(f'Отправлено сообщение телеграмм-боту: "{update.message.text}"')
+        logger.info(f'Отправлено сообщение телеграмм-боту: "{update.message.text}" от "{session_id}"')
 
 
 def main() -> None:

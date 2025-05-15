@@ -48,7 +48,6 @@ def create_intent(project_id, display_name, training_phrases_parts, message_text
     training_phrases = []
     for training_phrases_part in training_phrases_parts:
         part = dialogflow.Intent.TrainingPhrase.Part(text=training_phrases_part)
-        # Here we create a new training phrase for each provided part.
         training_phrase = dialogflow.Intent.TrainingPhrase(parts=[part])
         training_phrases.append(training_phrase)
 
@@ -71,8 +70,8 @@ if __name__ == '__main__':
     path_intents = os.environ['PATH_INTENT']
     project_id = os.environ['PROJECT_ID']
 
-    with open(path_intents, 'r') as my_file:
-        intents_json = my_file.read()
+    with open(path_intents, 'r') as file:
+        intents_json = file.read()
     intents = json.loads(intents_json)
 
     for intent in intents:

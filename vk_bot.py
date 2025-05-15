@@ -14,15 +14,15 @@ logger = logging.getLogger(__name__)
 
 
 def sends_messages(event, vk_api, proj_id, language_code):
-    session_id = random.randint(100000000, 999999999)
-    response_text = detect_intent_texts(proj_id, session_id, [event.text], language_code)
+    user_id = f'vk - {event.user_id}'
+    response_text = detect_intent_texts(proj_id, user_id, [event.text], language_code)
     if response_text:
         vk_api.messages.send(
             user_id=event.user_id,
             message=response_text,
             random_id=random.randint(1,1000)
         )
-        logger.info(f'Отправлено сообщение ВК-сообществу: "{event.text}"')
+        logger.info(f'Отправлено сообщение ВК-сообществу: "{event.text}" от "{user_id}"')
 
 
 if __name__ == "__main__":
